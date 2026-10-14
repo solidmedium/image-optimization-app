@@ -32,6 +32,7 @@ import {
   strengthSummary,
   type OptimizeSettings,
 } from "@/lib/optimize"
+import { FOLDER_TIP } from "@/lib/save-targets"
 import { cn } from "@/lib/utils"
 
 type SettingsPanelProps = {
@@ -98,11 +99,10 @@ export function SettingsPanel({
                   <span className="ml-auto text-xs text-muted-foreground">Change</span>
                 )}
               </Button>
-              {!folderName && (
-                <p className="text-xs text-muted-foreground">
-                  If you skip this, you&apos;ll be asked when you optimize.
-                </p>
-              )}
+              <p className="text-xs text-muted-foreground">
+                {FOLDER_TIP} The picker has a New Folder button.
+                {!folderName && " If you skip this, you'll be asked when you optimize."}
+              </p>
             </>
           )}
         </Section>

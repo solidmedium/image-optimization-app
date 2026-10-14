@@ -10,6 +10,11 @@ export type SaveTarget = {
   finish(): Promise<void>
 }
 
+// Chrome won't let any site write directly into these folders (it shows "contains
+// system files"), but subfolders inside them are fine.
+export const FOLDER_TIP =
+  "Pick or create a subfolder. Chrome blocks Desktop, Documents, Downloads and your home folder themselves."
+
 export function supportsFolderPicker() {
   return typeof window !== "undefined" && "showDirectoryPicker" in window
 }

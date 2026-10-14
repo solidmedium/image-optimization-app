@@ -21,6 +21,7 @@ import {
   createFolderTarget,
   createZipTarget,
   ensureWritePermission,
+  FOLDER_TIP,
   pickFolder,
   supportsFolderPicker,
 } from "@/lib/save-targets"
@@ -31,6 +32,12 @@ const CONCURRENCY = 3
 const ZIP_NAME = "optimized-images.zip"
 
 const subscribeToNothing = () => () => {}
+
+// Chrome's "contains system files" block ends in a plain cancel we can't tell
+// apart, so every cancel gets the tip.
+function notifyNoFolder() {
+  toast.info("No folder chosen", { description: FOLDER_TIP })
+}
 
 export function ImageOptimizer() {
   const [items, dispatch] = useReducer(queueReducer, [])
@@ -74,6 +81,7 @@ export function ImageOptimizer() {
     try {
       const dir = await pickFolder()
       if (dir) setFolder(dir)
+      else notifyNoFolder()
     } catch {
       toast.error("Couldn't open that folder", { description: "Try a different one." })
     }
@@ -87,7 +95,10 @@ export function ImageOptimizer() {
 
     // Still inside the click that started the run, so the picker is allowed to open.
     const dir = folder ?? (await pickFolder())
-    if (!dir) return null
+    if (!dir) {
+      notifyNoFolder()
+      return null
+    }
     setFolder(dir)
 
     if (!(await ensureWritePermission(dir))) {
